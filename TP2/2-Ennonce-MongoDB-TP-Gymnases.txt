@@ -1,0 +1,44 @@
+
+Les Qry sont à réaliser :
+	1) sur la shell mongo (localhost) ou sur Mongo Atlas (de préférence)
+	2) ET avec votre langage de prédéliction en se connectant à la DB : python, C#, ...
+
+
+Restorer la DB
+- - - - - - - -
+
+Indice : éxécuter les instructions suivantes :
+mongorestore --db gym Your_Path/Gymnases.bson
+mongorestore --db gym Your_Path/Sportifs.bson
+
+Lancer le démon et le shell de Mongo
+Afficher l’ensemble des bases de données chargées
+=> si vous avez bien inséré vos données -> vous trouverez la DB "gym" !
+
+Sélectionner la DB "gym" ?
+
+Explore your DataBase (en MQL et avec votre langage préféré : Python, Node, php,...) :
+- - - - - - - - - - -
+
+1) Afficher toutes les collections de la base, Compter le nombre de documents ds chacune des collections, Afficher un document de chacune des collections ?
+2) On cherche le (ou les) conseiller(s) s’appelant "KERVADEC" ?
+3) On cherche les sportifs qui ont ou bien 32 ans ou 40 ans ?
+4) On cherche les sportifs jouant au Basket-ball ?
+5) On cherche les sportifs ayant au moins 32 ans, ou de sexe féminin ?
+6) Trouver le nombre de sportifs de sexe féminin dans la base ?
+7)	Quels sont les sportifs (identifiant, nom et prénom) qui ont entre 20 et 30 ans ?
+8)	Quels sont les sportifs (identifiant et nom) qui pratiquent du hand ball ?
+9)	Quels sont les gymnases de “Villetaneuse” ou de “Sarcelles” qui ont une surface de plus de 400 m2 ?
+10)	Dans quels gymnases peut-on jouer au hockey le mercredi après 15H ?
+11)	Quels sportifs (identifiant et nom) ne pratiquent aucun sport ?
+12)	Quels gymnases n’ont pas de séances le dimanche ?
+13)	Quels gymnases ne proposent que des séances de basket ball ou de volley ball ?
+14)	Quels sont les entraîneurs qui sont aussi joueurs ?
+15)	Quels sont les sportifs qui sont des conseillers ?
+16)	Pour le sportif “Kervadec” quel est le nom de son conseiller ?
+17)	Quels entraîneurs entraînent du hand ball et du basket ball ?
+18)	Quels sportifs n’ont pas de conseillers ?
+19) Votre propre Qry : la plus intéressante et/ou la plus complexe...
+20) 1 point offert
+
+Bon courage et bonne chance !
