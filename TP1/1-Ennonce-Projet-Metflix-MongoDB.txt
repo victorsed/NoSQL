@@ -1,0 +1,221 @@
+Q : Après avoir installé MongoDB, lister les DB fournies par défaut (ds l'installation) ?
+
+Indice :  show dbs
+# S : Les db qui existent par défaut : test (0.078GB) et 1autre local qui s'appelle "local" (0.078GB) !
+
+##  Pour la suite, fournir :
+  - la Qry en SQL (la syntaxe sans l'executer),
+  - Qry en MongoDB (executer ds le shell de MongoDB)
+  - Exécuter la Qry avec Python
+
+
+#########################################################################
+#####      insertOne() avec MongoDB & Python (pymongo)              #####
+
+Q : Créer 1è DB "metflix" qui contient 1collection "movies" dans laquelle vs inserez les documents suivants :
+    Comparer le comportement du shell Mongo et Python
+
+  title = Rocky ; year = 1976
+  title = Rocky ; year = 1976 ; _id = tt0075148
+  title = Rocky ; year = 1976 ; _id = tt0075148
+  title = Rocky ; year = 1976
+
+  et 1autre collection "users" :
+
+  - qui contient un document qui porte votre nom et prénom,
+
+  Démarche et Indices shell :
+    - utiliser insertOne(), par ex : insertOne({"tilte" : ...})
+    - utiliser findOne(), find().pretty(), count()
+
+  Démarche et Indices Python : tout en gérant les exceptions (try/except)
+    - installer pymongo (API officiel Python pr MongoDB),
+    - supprimer la DB "metflix", la recréer et s'y connecter dessus
+    - y insérer les mêmes données
+
+  Conclusion 1 : Si on ne précise pas l'Id, il sera crée automtq par MongoDB.
+       On peux aussi indiquer un _id (naturel).
+       E11000 duplicate key error collection
+
+  Conclusion 2 : 1è caractéristique de MongoDB : Redondonce !
+
+#########################################################################
+#####                                insertMany()                   #####
+
+Q : Supp la dernière collection, la recréer en y insérant les documents suivants :
+  title = Rocky, year = 1976, _id = tt0075148
+  title = Jaws, year = 1975, imdb = tt0073195
+  title = Mad Max 2 : The Road Warrior, year = 1981, imdb = tt0082694
+  title = Raiders of the Lost Ark, year = 1981, imdb = tt0082971
+
+
+  Indice : utiliser insertMany(), par ex : insertMany([{"title" : ...}, {"title" : ...}])
+
+#########################################################################
+#####                          find avec des paramètres             #####
+
+Q : Afficher ts les documents de la collection movies, le tout 1è document, le(s) document(s) où on trouve les films produits en 1981, le document où on trouve le film qui porte le titre "Jaws" ?
+
+  Indice : utiliser find().pretty(), findOne(), find({"title":"Jaws"}).pretty()
+
+#########################################################################
+#####                            MongoDB & SQL                      #####
+
+Q : Créer 1BD MySQL (en groupe) sur Azure ou équivalent : AWS, Google Cloud Computing, remote mysql,... d'un blog où :
+  - Des authors créent 1compte, s'identifient et se connectent avec les infos "minimales" suivantes : email, username et password (appeler vos objets comme je le mentionne et inclure un timestamp pr ttes les transactions).
+  - Les authors publient des posts (avec un title, un ou plusieurs tags, les tags sont obligatoires pr valider la publication d'1post).
+  - Des visiteurs peuvent venir sur le blog et consulter le contenu sans s'inscrire ! Lorsqu'ils veuvent laisser des commentaires sur les posts, ils renseignent les infos suivantes : name et email (qui vont apparaître dans le comment).
+  Rq : Un auteur n'as pas le droit de laisser un commentaire sur son propre post !
+  Rq : Si vous voulez complexifier la DB, ajouter le fait qu'un visteur lorsqu'il souhaite laisser un commentaire, il est invité à s'inscrire sur le blog. Un User peut répondre à un commentaire d'un autre User !
+  - Obligatoire : réaliser le diagramme des classes et le modele physique des données.
+  - Nourissez la DB en publiant des posts et en laissant des commentaires (par vs-mêmes).
+  - Afficher 1post écrit par un certain auteur avec les tags et les comments qui vont avec ? (et indiquer combien de tables avez-vs utilisé pour cette Qry ?)
+
+Q : Créer la même DB avec MongoDB en groupe sur Atlas ou équivalent mlab, Azure,... réaliser la même Qry, noter combien de collections sollicitez-vs pr faire la Qry ?
+
+#########################################################################
+#####               Import de fichiers .json ?                      #####
+
+Q : Créer une DB movies_artists avec deux collections : une pour les films et l’autre pour les artistes (voir les fichiers artists.json et movies.json associés) ?
+# Rq: Préciser, lors de l'injection des fichiers json, dans la commande "mongoimport" la possibilité de supprimer la collection si elle existe (pour qu'elle soit recréer de nouveau et y injecter de la data fraîche).
+
+Indice :
+  use movies_artists  // La création de la BD est implicite
+  // La création des deux collections est implicites
+  mongoimport -d nom_db -c nom_collection --drop --file "C:/.../movies.json" --jsonArray
+  // Vérification
+  db.artists.find().pretty()
+  db.movies.find().pretty()
+
+Q : Augmenter la collection movies avec le fichier movies_suite.json ?
+Indice :
+- à l'aide de mongoimport
+mongoimport -d movies_artists -c collection movies --mode insert --file "C:/.../movies_suite.json" --jsonArray
+- Autres méthodes sont possibles : ...
+
+Q : Augmenter la collection artists avec le fichier artists_suite.json après l'avoir transformer en csv (la conversion du json vers csv est obligatoire) ?
+Indice :
+- à l'aide de mongoimport
+mongoimport -d movies_artists -c artists --type csv --headerline --file "C:/.../artists_suite.csv"
+
+
+- Autres méthodes sont possibles : ...
+
+Q : Approfondissement
+Q : Qu'est-ce q'un upsert et cmnt faire upsert à l'aide d'un fichier json ?
+Indice :
+mongoimport -d nom_db -c nom_collection --mode upsert --upsertFields Id --file "C:/.../movies_upsert.json" --jsonArray
+
+
+#########################################################################
+#####               Pagination des résultats ?                      #####
+
+Q : Afficher les 12 documents (films) à partir du dixième inclus en se limitant aux title et _id ?
+Indice :
+  Les options skip et limit permettent de « paginer » le résultat (comme en SQL)
+
+#########################################################################
+#####                  Trier les resultats ?                        #####
+
+Q : Trier les documents (de la dernière qry) sur le titre du film ds un ordre croissant (ensuite décroissant) ?
+
+Indice : utiliser sort()
+
+#########################################################################
+#####             Critères de recherche simples ?         #####
+
+Q : Afficher les infos du film dont l'id est 2 ? Se limiter aux infos relatives au titre, au genre et au summary ?
+Indice : utiliser findOne({"_id": "movie:2"}, {"title" : 1,...})
+Projection (ramener des sous parties des documents)
+
+Q : Combien de films ont été produit en en 1979 et les afficher en se limitant aux infos relatives au titre, à l'année et à la liste des acteurs suivant un ordre alphabétique décroissant sur le titre.
+Indice : 2films : Alien et les bronzés font du ski.
+
+Q : Afficher les infos sur le film dont le genre est "Science-fiction" et produit en 1979 sans préciser l'_id et le summary ?
+Indice : Alien ! Si on choisit d’indiquer des attributs à exclure on leur donne la valeur 0 ou null !
+
+Q : Corriger ces Qry ?
+
+db.movies.find({"titre": "Alien"})
+Indice : Ns avons mal saisit la Qry : "titre" au lieu de "title" => 0 doc.
+Indice : MongoDB ne proteste pas quand on fait une faute de frappe sur des noms d’attributs (contrairement à SQL).
+
+db.movies.find({"title": "alien"})
+Indice : Ns avons mal saisit "alien" au lieu "Alien" => 0 doc (ce qui est normal). En d'autres termes, ns ne soulevons pas une erreur de syntaxe (contrairement à la Qry précédente).
+Indice : On peut introduire une expression régulière pour que la recherche soit case insensitive (voir plus bas)
+
+#########################################################################
+#####             Critères de recherche complexes ?                 #####
+
+# Recherche dans un objet ou un tableau imbriqué ?
+
+Q : Combien de films produits par le director dont l'id est 4 et les afficher de plus récent au moins récent (sans le résumé ni le country ni le genre) ?
+Indice : Gladiator, Blade Runer et Alien
+
+Q : Combien de films produits par le director qui porte l'id 4 et dont l'un des acteurs a joué le rôle de Maximus et les afficher sans le résumé ni le country ni le genre ?
+Indice : Gladiator
+
+Q : Ecrire la dernière Qry en déclarant des variables ?
+
+
+#########################################################################
+#####           Critère de recherche par intervalles                #####
+
+Q : Ts les films produits après 2000 compris et avant 2005 exlus (dans un ordre chronologique) en se limitant au titre du film et son année de production ?
+
+#########################################################################
+#####               Opérateurs booléens                             #####
+
+Q : Lister les films parus en 1997 ou avec l'acteur id = 147 ?
+// R :
+db.movies.find({$or : [{"year": 1997}, {"actors._id": "artist:147"}] })
+
+#########################################################################
+#####       Opérateurs ensemblistes : in, not in, any, all, exists  #####
+
+Q : Combien de films dans lesquels ont joué au moins un des artistes suivants : 34, 98 et 1 et afficher leur titre et la liste des actors ; sens du tri : chronologique et alphabétique croissant sur les noms des artistes ?
+Indice : Utiliser $in ; 3 films : Le parrain III, Bad Lieutenant, Reservoir dogs, Pulp fiction.
+
+Q : Chercher les films dans lesquels ont joué ensemble les actors 23 et 147 ?
+Indice : Utiliser $all ; Gladiator
+
+Q : Combien de films dans lesquels ont joué ni l'acteur 34, ni 98, ni 1 et afficher leur titre et la liste des actors ; sens du tri : chronologique décroissant et alphabétique croissant sur les titres des films ?
+// Indice : 84 films ; Utiliser $in
+
+Q : Combien de films qui n’ont pas d’attribut actors ? Combien de films dont l'attribut actors n'est pas renseigné et les afficher ?
+Indice : 0 films ; 6 films
+
+
+
+// Jointure
+
+Q : Donnez tous les films dont le directeur est Clint Eastwood ?
+// R :
+
+eastwood = db.artists.findOne({"first_name": "Clint", "last_name": "Eastwood"})
+// Rq : On dispose maintenant d’un objet eastwood. Une seconde requête sur les movies va récupérer les films dirigés par cet artiste !
+db.movies.find({"director._id": eastwood['_id']}, {"title": 1, "director._id" : 1})
+// Rq : L'info est reconstituée en 2 étapes !
+
+#########################################################################
+#####                  Expressions régulières ?                     #####
+
+Q : Tous les films dont le titre commence par 'Re' ?
+// R :
+db.movies.find ({"title": /^Re/}, {"actors": null, "summary": 0}).pretty()
+// Rq : Pas d’apostrophes autour de l’expression régulière !
+
+Q : Tous les films dont le titre finit par 'la' ?
+db.movies.find ({"title": /la$/}, {"actors": null, "summary": 0}).pretty()
+
+https://stackoverflow.com/questions/8246019/case-insensitive-search-in-mongo
+
+
+Q : Combien de films ont été joués par l'acteur dont l'id est 147 et les afficher en se limitant au titre du film et la liste des acteurs ?
+
+Q : Retourner les films joués par l'acteur 147 sans les acteurs et sans le résumé ?
+
+
+
+
+
