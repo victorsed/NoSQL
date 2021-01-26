@@ -32,10 +32,12 @@ Répondre aux questions suivantes :
 >     }},
 >     { $project : {
 >         "name":1, "borough":1, "_id":0
+>    }},
+>     { $group: {         
+>         "_id": "$borough", "nb_restaurant" : {$sum : 1}     
 >     }},
->     { $addFields: {         
->         lastElem: { $last: "$date" }      
->     }}
+>     { $sort : {"_id" : 1}
+>     }
 > ] )
 
 # Q : Calculer le score moyen des resto par quartier et trier par score décroissant ? 
@@ -51,14 +53,33 @@ Q : Créer une collection "transactions" à partir du fichier transactions.json 
 
 > db.createCollection("transactions")
 
-> mongoimport -d db_agg -c transactions --drop --file "D:/Cours/B3/NoSQL/TP3/tp3json/transactions.json" --jsonArray
+> mongoimport -d restaurant -c transactions --drop --file "D:/Cours/B3/NoSQL/TP3/tp3json/transactions.json" --jsonArray
 
 
-Q-1. Calculer le montant total des paiements ? 
-# Indice : key : Payment.Total 
-Q-2. Calculer le montant total par paiment ? 
-Q-3. Calculate total payments (Payment.Total) for each payment type (Payment.Type) ? 
-Q-4. Trouver l Id le plus élevé. Q-5. Find the max price (Transaction.price) ?
+# Q-1. Calculer le montant total des paiements ? 
+# Indice : key : Payment.Total
+
+> db.transactions.aggregate([{
+>     $group: {
+>         _id:'PaiementsTotal',
+>         montant_total: { $sum: '$Payment.Total' }
+>     }
+> }])
+
+# Q-2. Calculer le montant total par paiment ? 
+
+db.transactions.aggregate([
+    {
+        $project: {
+            montant: { $sum:"$Panier.price"},
+        }
+    }
+])
+
+# Q-3. Calculate total payments (Payment.Total) for each payment type (Payment.Type) ? 
+
+
+# Q-4. Trouver l Id le plus élevé. Q-5. Find the max price (Transaction.price) ?
 
 ##### Distinct ##### 
 # Q : Age unique => distinct ? db.people.distinct("age") 
@@ -67,5 +88,5 @@ Q-4. Trouver l Id le plus élevé. Q-5. Find the max price (Transaction.price) ?
 
 
 #############################################
-var schematodo = db.restaurants.findOne();
+var schematodo = db.transactions.findOne();
 for (var key in schematodo) { print (key) ; }
