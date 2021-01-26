@@ -88,7 +88,9 @@ Q : Créer une collection "transactions" à partir du fichier transactions.json 
 >     }
 > ])
 
-# Q-4. Trouver l Id le plus élevé. Q-5. Find the max price (Transaction.price) ?
+# Q-4. Trouver l Id le plus élevé. 
+
+# Q-5. Find the max price (Transaction.price) ?
 
 ##### Distinct ##### 
 # Q : Age unique => distinct ? db.people.distinct("age") 
