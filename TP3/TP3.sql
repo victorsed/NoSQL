@@ -10,10 +10,6 @@ db.createCollection("restaurants")
 
 mongoimport -d db_agg -c restaurants --drop --file "D:/Cours/B3/NoSQL/TP3/tp3json/restaurants.json"
 
-var schematodo = db.restaurants.findOne();
-for (var key in schematodo) { print (key) ; }
-
-
 Répondre aux questions suivantes : 
 # Q : La répartition des restaurants par quartier ? 
 # Indice : quartier => key 'borough' 
@@ -30,8 +26,18 @@ db.restaurants.aggregate( [
 # Q : un grade "C" par quartier ? 
 # Indice : la dernière inspection : la plus récente, donc la première de La répartition des restaurants dont la dernière inspection a donné la liste ! # key : "grade" 
 
-
-
+db.restaurants.aggregate( [
+    { $match : {
+        "grades.0.grade":"C"
+    }},
+    { $project : {
+        "name":1, "borough":1, "_id":0
+    }},
+    { $group: {
+      _id: 0,
+      last: { $last: "$date" }
+     }
+] )
 
 # Q : Calculer le score moyen des resto par quartier et trier par score décroissant ? 
 # Indice : utiliser l'opérateur unwid { "_id" : "Queens", "moyenne" : 11.634865110930088 } { "_id" : "Brooklyn", "moyenne" : 11.447723132969035 } { "_id" : "Manhattan", "moyenne" : 11.41823125728344 } { "_id" : "Staten Island", "moyenne" : 11.370957711442786 } { "_id" : "Bronx", "moyenne" : 11.036186099942562 } { "_id" : "Missing", "moyenne" : 9.632911392405063 }
@@ -48,3 +54,6 @@ Q-4. Trouver l'Id le plus élevé. Q-5. Find the max price (Transaction.price) ?
 # Q : Age unique => distinct ? db.people.distinct("age") 
 # S : [ 20, 35, 60 ] Q : Peut-on faire un distinct sur plusieurs key ? db.people.distinct("name", "age") 
 # R : Ce n'est pas possible de faire un distinct sur plusieurs key => Il faut passer par map reduce !
+
+var schematodo = db.restaurants.findOne();
+for (var key in schematodo) { print (key) ; }
