@@ -68,16 +68,25 @@ Q : Créer une collection "transactions" à partir du fichier transactions.json 
 
 # Q-2. Calculer le montant total par paiment ? 
 
-db.transactions.aggregate([
-    {
-        $project: {
-            montant: { $sum:"$Panier.price"},
-        }
-    }
-])
+> db.transactions.aggregate([
+>     {
+>         $project: {
+>             montant: { $sum:"$Panier.price"},
+>         }
+>     }
+> ])
 
 # Q-3. Calculate total payments (Payment.Total) for each payment type (Payment.Type) ? 
 
+> db.transactions.aggregate([
+>     {
+>         $group: {
+>             _id: "$Payment.Type",
+>             totalAmount: { $sum: "$Payment.Total"},
+>             count: { $sum: 1}
+>         }
+>     }
+> ])
 
 # Q-4. Trouver l Id le plus élevé. Q-5. Find the max price (Transaction.price) ?
 
