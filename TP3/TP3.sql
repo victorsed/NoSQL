@@ -89,8 +89,26 @@ Q : Créer une collection "transactions" à partir du fichier transactions.json 
 > ])
 
 # Q-4. Trouver l Id le plus élevé. 
+> db.transactions.aggregate([
+>     {
+>         $group:
+>         {
+>             _id:'',
+>             maxId: {$max:"$Id"}
+>         }
+>     }
+> ])
 
 # Q-5. Find the max price (Transaction.price) ?
+> db.transactions.aggregate([
+>     {
+>         $group:
+>         {
+>             _id:'',
+>             maxPrice: {$max: {$max: "$Panier.price"}}
+>         }
+>     }
+> ])
 
 ##### Distinct ##### 
 # Q : Age unique => distinct ? db.people.distinct("age") 
