@@ -58,13 +58,42 @@ db.game.aggregate( [
 
 db.game.find ({"Name": /^Wi/}, {"Name":1, "Platform": 1, "_id": 0}).pretty()
 
+### Nb de ventes Max sur le jeu le plus vendu en NA ###
+
+db.game.aggregate(
+   [
+     { $project: { 
+         "NA_Sales":1
+        }
+     },
+     { $group: {
+        _id: "$Name",
+        maxSellsNA: { $max: "$NA_Sales" }
+     }} 
+   ]
+)
+
+### Classement des ventes de jeux par rank ###
+
+db.game.aggregate(
+   [
+     { $project: { 
+         "Name":1, "Platform":1, "Rank":1, "Global_Sales":1, "_id":0
+        }
+     },
+     { $sort: {
+        "Rank":1
+     }} 
+   ]
+)
+
 
 ### Pourcentage des ventes par Zones géographiques ###
 
 db.game.aggregate(
    [
      { $project: { 
-         "Name":1, "_id":0,
+         "Name":1, "_id":1,
          "percentage_NA_Sales": { 
                 "$concat": [ { "$substr": [ { "$multiply": [ { "$divide": [ "$NA_Sales", "$Global_Sales"] }, 100 ] }, 0,3 ] }, "", " %" ]}
         ,
@@ -86,7 +115,7 @@ db.game.aggregate(
 db.game.aggregate(
    [
      { $project: { 
-         "Name":1, "_id":0, "Genre":1,
+         "Name":1, "_id":0, "Platform":1, "Genre":1,
          "percentage_NA_Sales": { 
                 "$concat": [ { "$substr": [ { "$multiply": [ { "$divide": [ "$NA_Sales", "$Global_Sales"] }, 100 ] }, 0,3 ] }, "", " %" ]}
         ,
@@ -102,32 +131,9 @@ db.game.aggregate(
      },
      {
         $sort : {
-           "Genre":1
+           "Platform":1
         }
      }      
    ]
 )
-
-db.game.aggregate(
-   [
-     { $project: { 
-         "Name":1, "_id":0, 
-        }
-     }   
-   ]
-)
-
-db.game.aggregate(
-   [
-     { $project: { 
-         "Name":1, "_id":0, "NA_Sales":1
-        }
-     },
-     { $group: {
-        _id: null,
-        maxSellsNA: { $max: "$NA_Sales" }
-     }}   
-   ]
-)
-
 
