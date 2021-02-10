@@ -1,6 +1,8 @@
-mongoimport -d vg_sales -c game --mode insert --type csv --headerline --file "D:\Cours\B3\NoSQL\Projet\csv\vgsales.csv"
+use vg_sales 
 
 db.createCollection("game")
+
+# mongoimport -d vg_sales -c game --mode insert --type csv --headerline --file "D:\Cours\B3\NoSQL\Projet\csv\vgsales.csv"
 
 ### Lister les jeux par année ###
 
